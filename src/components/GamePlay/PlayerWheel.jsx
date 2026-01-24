@@ -12,6 +12,12 @@ export default function PlayerWheel() {
   const players = state.players;
   const segmentAngle = 360 / players.length;
 
+  // SVG 参数
+  const size = 256; // 转盘尺寸
+  const center = size / 2;
+  const radius = size / 2 - 4; // 留出边框空间
+  const innerRadius = 32; // 中心圆半径
+
   // 检查游戏是否应该结束
   useEffect(() => {
     if (checkGameEnd()) {
@@ -30,9 +36,12 @@ export default function PlayerWheel() {
     const randomIndex = Math.floor(Math.random() * players.length);
     
     // 计算旋转角度 (多转几圈 + 目标角度)
+    // 指针在顶部，需要将被选中玩家的扇形中心旋转到顶部
     const extraSpins = 5 + Math.floor(Math.random() * 3); // 5-7圈
-    const targetAngle = randomIndex * segmentAngle;
-    const totalRotation = rotation + (extraSpins * 360) + (360 - targetAngle) + (segmentAngle / 2);
+    // 玩家扇形中心角度（相对于初始位置）
+    const segmentCenterAngle = randomIndex * segmentAngle + segmentAngle / 2;
+    // 转盘需要旋转的角度：多转几圈 + 让扇形中心对准顶部
+    const totalRotation = rotation + (extraSpins * 360) + (360 - segmentCenterAngle);
     
     setRotation(totalRotation);
 
@@ -57,21 +66,53 @@ export default function PlayerWheel() {
     };
   }, []);
 
-  // 生成颜色
+  // 生成扇形颜色
   const getColor = (index) => {
     const colors = [
-      'from-rose-400 to-pink-500',
-      'from-orange-400 to-amber-500',
-      'from-yellow-400 to-lime-500',
-      'from-green-400 to-emerald-500',
-      'from-teal-400 to-cyan-500',
-      'from-blue-400 to-indigo-500',
-      'from-violet-400 to-purple-500',
-      'from-fuchsia-400 to-pink-500',
-      'from-red-400 to-rose-500',
-      'from-sky-400 to-blue-500',
+      ['#fb7185', '#ec4899'], // rose-pink
+      ['#fb923c', '#f59e0b'], // orange-amber
+      ['#facc15', '#84cc16'], // yellow-lime
+      ['#4ade80', '#10b981'], // green-emerald
+      ['#2dd4bf', '#06b6d4'], // teal-cyan
+      ['#60a5fa', '#6366f1'], // blue-indigo
+      ['#a78bfa', '#8b5cf6'], // violet-purple
+      ['#e879f9', '#ec4899'], // fuchsia-pink
+      ['#f87171', '#fb7185'], // red-rose
+      ['#38bdf8', '#3b82f6'], // sky-blue
     ];
     return colors[index % colors.length];
+  };
+
+  // 计算扇形路径
+  const getSegmentPath = (index) => {
+    const startAngle = (index * segmentAngle - 90) * (Math.PI / 180);
+    const endAngle = ((index + 1) * segmentAngle - 90) * (Math.PI / 180);
+    
+    const x1 = center + radius * Math.cos(startAngle);
+    const y1 = center + radius * Math.sin(startAngle);
+    const x2 = center + radius * Math.cos(endAngle);
+    const y2 = center + radius * Math.sin(endAngle);
+    
+    const largeArcFlag = segmentAngle > 180 ? 1 : 0;
+    
+    return `M ${center} ${center} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+  };
+
+  // 计算文字位置和旋转
+  const getTextTransform = (index) => {
+    const midAngle = (index * segmentAngle + segmentAngle / 2 - 90) * (Math.PI / 180);
+    // 文字放在扇形中间偏外的位置
+    const textRadius = (radius + innerRadius) / 2 + 15;
+    const x = center + textRadius * Math.cos(midAngle);
+    const y = center + textRadius * Math.sin(midAngle);
+    // 文字旋转角度，使其沿径向排列
+    const rotateAngle = index * segmentAngle + segmentAngle / 2;
+    return { x, y, rotateAngle };
+  };
+
+  // 截断过长的名字
+  const truncateName = (name, maxLen = 4) => {
+    return name.length > maxLen ? name.slice(0, maxLen) + '..' : name;
   };
 
   // 计算游戏进度
@@ -122,44 +163,71 @@ export default function PlayerWheel() {
                             border-t-indigo-600 drop-shadow-lg" />
           </div>
 
-          {/* 转盘 */}
-          <motion.div
-            className="w-full h-full rounded-full overflow-hidden shadow-2xl border-4 border-white"
+          {/* SVG 转盘 */}
+          <svg
+            width={size}
+            height={size}
+            className="drop-shadow-2xl"
             style={{ 
               transform: `rotate(${rotation}deg)`,
               transition: isSpinning ? 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none'
             }}
           >
+            {/* 外圈边框 */}
+            <circle cx={center} cy={center} r={radius + 2} fill="white" />
+            
+            {/* 扇形区域 */}
             {players.map((player, index) => {
-              const startAngle = index * segmentAngle;
-              const endAngle = (index + 1) * segmentAngle;
+              const colors = getColor(index);
+              const gradientId = `gradient-${index}`;
+              const { x, y, rotateAngle } = getTextTransform(index);
               
               return (
-                <div
-                  key={player.id}
-                  className={`absolute w-full h-full origin-center`}
-                  style={{
-                    clipPath: `polygon(50% 50%, ${50 + 50 * Math.cos((startAngle - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin((startAngle - 90) * Math.PI / 180)}%, ${50 + 50 * Math.cos((endAngle - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin((endAngle - 90) * Math.PI / 180)}%)`
-                  }}
-                >
-                  <div className={`w-full h-full bg-gradient-to-br ${getColor(index)}`} />
-                  <div
-                    className="absolute top-1/4 left-1/2 -translate-x-1/2 text-white font-bold text-sm drop-shadow"
+                <g key={player.id}>
+                  {/* 渐变定义 */}
+                  <defs>
+                    <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor={colors[0]} />
+                      <stop offset="100%" stopColor={colors[1]} />
+                    </linearGradient>
+                  </defs>
+                  
+                  {/* 扇形 */}
+                  <path
+                    d={getSegmentPath(index)}
+                    fill={`url(#${gradientId})`}
+                    stroke="white"
+                    strokeWidth="1"
+                  />
+                  
+                  {/* 玩家名称 */}
+                  <text
+                    x={x}
+                    y={y}
+                    fill="white"
+                    fontSize={players.length > 6 ? "11" : "13"}
+                    fontWeight="bold"
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    transform={`rotate(${rotateAngle}, ${x}, ${y})`}
                     style={{
-                      transform: `rotate(${startAngle + segmentAngle / 2}deg) translateY(-20px)`,
-                      transformOrigin: 'center 128px'
+                      textShadow: '1px 1px 2px rgba(0,0,0,0.5)',
+                      pointerEvents: 'none'
                     }}
                   >
-                    {player.name}
-                  </div>
-                </div>
+                    {truncateName(player.name, players.length > 6 ? 3 : 4)}
+                  </text>
+                </g>
               );
             })}
-          </motion.div>
+            
+            {/* 中心圆 */}
+            <circle cx={center} cy={center} r={innerRadius} fill="white" />
+          </svg>
 
-          {/* 中心圆 */}
+          {/* 中心图标 */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
-                          w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center">
+                          w-16 h-16 flex items-center justify-center pointer-events-none">
             <span className="text-2xl">{isSpinning ? '🎲' : '🎯'}</span>
           </div>
         </div>
