@@ -1,44 +1,16 @@
-# Truth_or_Dare
-## 项目完成总结
-### 已实现的功能
-1. 游戏准备阶段
-- 欢迎页面：展示游戏介绍和开始按钮
-- 玩家设置：支持添加4-10名玩家，快速添加功能
-- 游戏配置：时长(30/45/60分钟)、难度(轻松/标准/挑战)、主题(情感/搞笑/校园/职场/混合)、惩罚机制
-- 参与须知：安全词、隐私保护、退出机制说明
-2. 游戏进行阶段
-- 转盘选人：带动画效果的随机玩家选择器
-- 挑战选择：真心话/大冒险选择，10秒倒计时
-- 挑战展示：显示问题/任务、难度星级、倒计时
-- 投票系统：通过/有趣加分/需解释
-- 积分系统：实时积分排行榜
-- 道具系统：反转卡、保护卡、双倍卡、捣乱卡
-3. 题库系统
-- 70道真心话（按情感/搞笑/校园/职场/混合分类）
-- 70道大冒险（表演/互动/搞笑/才艺等类型）
-- 智能出题：避免重复、根据难度筛选
-4. 游戏结束
-- 最终排名和积分展示
-- 特别奖项：勇气之星、幽默之王
-- 游戏统计数据
-- 精彩回顾
+# React + Vite
 
-### 项目文件结构
-```
-truth_or_dare/
-├── src/
-│   ├── components/
-│   │   ├── GameSetup/      # 游戏设置组件
-│   │   ├── GamePlay/       # 游戏进行组件
-│   │   └── Results/        # 结果展示组件
-│   ├── context/
-│   │   └── GameContext.jsx # 游戏状态管理
-│   ├── data/
-│   │   ├── truthQuestions.js  # 真心话题库
-│   │   └── dareQuestions.js   # 大冒险题库
-│   ├── App.jsx
-│   └── index.css
-├── package.json
-├── vite.config.js
-└── tailwind.config.js
-```
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

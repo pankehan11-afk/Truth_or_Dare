@@ -1,0 +1,133 @@
+// 真心话题库
+// 分类: emotion(情感), funny(搞笑), school(校园), work(职场)
+// 难度: 1-5星
+
+export const truthQuestions = [
+  // 情感类 - 轻松
+  { id: 't001', content: '你最近一次心动是什么时候？', category: 'emotion', difficulty: 1 },
+  { id: 't002', content: '你理想中的约会是什么样的？', category: 'emotion', difficulty: 1 },
+  { id: 't003', content: '你喜欢什么类型的异性/同性？', category: 'emotion', difficulty: 1 },
+  { id: 't004', content: '你相信一见钟情吗？', category: 'emotion', difficulty: 1 },
+  { id: 't005', content: '你觉得暧昧期最甜蜜还是恋爱期？', category: 'emotion', difficulty: 1 },
+  
+  // 情感类 - 中等
+  { id: 't006', content: '你有没有偷偷喜欢过谁但没说出口？', category: 'emotion', difficulty: 2 },
+  { id: 't007', content: '你被拒绝过吗？当时什么感受？', category: 'emotion', difficulty: 2 },
+  { id: 't008', content: '你觉得在场谁最有魅力？', category: 'emotion', difficulty: 2 },
+  { id: 't009', content: '你最浪漫的经历是什么？', category: 'emotion', difficulty: 2 },
+  { id: 't010', content: '你有没有吃过前任的醋？', category: 'emotion', difficulty: 2 },
+  
+  // 情感类 - 挑战
+  { id: 't011', content: '说出你现在最想见的人是谁，为什么？', category: 'emotion', difficulty: 3 },
+  { id: 't012', content: '你做过最疯狂的追求行为是什么？', category: 'emotion', difficulty: 3 },
+  { id: 't013', content: '你有没有同时喜欢过两个人？', category: 'emotion', difficulty: 3 },
+  { id: 't014', content: '你最后悔没有表白的人是谁？', category: 'emotion', difficulty: 4 },
+  { id: 't015', content: '如果在场有人向你表白，你会接受谁？', category: 'emotion', difficulty: 4 },
+  
+  // 搞笑类 - 轻松
+  { id: 't016', content: '你做过最蠢的事是什么？', category: 'funny', difficulty: 1 },
+  { id: 't017', content: '你有什么奇怪的小癖好？', category: 'funny', difficulty: 1 },
+  { id: 't018', content: '你洗澡的时候会唱歌吗？唱什么？', category: 'funny', difficulty: 1 },
+  { id: 't019', content: '你最怕什么动物或东西？', category: 'funny', difficulty: 1 },
+  { id: 't020', content: '你有没有自己给自己起过外号？', category: 'funny', difficulty: 1 },
+  
+  // 搞笑类 - 中等
+  { id: 't021', content: '你最尴尬的社死瞬间是什么？', category: 'funny', difficulty: 2 },
+  { id: 't022', content: '你有没有在公共场合出过糗？', category: 'funny', difficulty: 2 },
+  { id: 't023', content: '你手机里最不想让别人看到的是什么？', category: 'funny', difficulty: 2 },
+  { id: 't024', content: '你有没有假装听懂其实完全没懂？', category: 'funny', difficulty: 2 },
+  { id: 't025', content: '你做过最离谱的梦是什么？', category: 'funny', difficulty: 2 },
+  
+  // 搞笑类 - 挑战
+  { id: 't026', content: '你有没有偷偷关注过谁的社交媒体？', category: 'funny', difficulty: 3 },
+  { id: 't027', content: '说出你最不想承认的黑历史', category: 'funny', difficulty: 3 },
+  { id: 't028', content: '你有没有在背后吐槽过在场的人？', category: 'funny', difficulty: 4 },
+  { id: 't029', content: '你最想删掉的聊天记录是什么？', category: 'funny', difficulty: 4 },
+  { id: 't030', content: '说出你撒过最大的谎', category: 'funny', difficulty: 5 },
+  
+  // 校园类 - 轻松
+  { id: 't031', content: '你上学时最喜欢的科目是什么？', category: 'school', difficulty: 1 },
+  { id: 't032', content: '你有没有逃过课？', category: 'school', difficulty: 1 },
+  { id: 't033', content: '你最怀念学生时代的什么？', category: 'school', difficulty: 1 },
+  { id: 't034', content: '你有没有在课上睡着被老师发现？', category: 'school', difficulty: 1 },
+  { id: 't035', content: '你上学时最讨厌的科目是什么？', category: 'school', difficulty: 1 },
+  
+  // 校园类 - 中等
+  { id: 't036', content: '你有没有暗恋过老师或学长学姐？', category: 'school', difficulty: 2 },
+  { id: 't037', content: '你有没有抄过作业或考试作弊？', category: 'school', difficulty: 2 },
+  { id: 't038', content: '你上学时做过什么叛逆的事？', category: 'school', difficulty: 2 },
+  { id: 't039', content: '你有没有因为喜欢谁而特意选课？', category: 'school', difficulty: 2 },
+  { id: 't040', content: '你收到过情书或表白吗？', category: 'school', difficulty: 2 },
+  
+  // 校园类 - 挑战
+  { id: 't041', content: '说出你学生时代最想忘记的事', category: 'school', difficulty: 3 },
+  { id: 't042', content: '你有没有和同学发生过冲突？', category: 'school', difficulty: 3 },
+  { id: 't043', content: '你最后悔没有做的校园事是什么？', category: 'school', difficulty: 4 },
+  
+  // 职场类 - 轻松
+  { id: 't044', content: '你理想的工作是什么？', category: 'work', difficulty: 1 },
+  { id: 't045', content: '你有没有上班摸鱼过？', category: 'work', difficulty: 1 },
+  { id: 't046', content: '你最讨厌什么样的同事？', category: 'work', difficulty: 1 },
+  { id: 't047', content: '你有没有在工作中哭过？', category: 'work', difficulty: 1 },
+  { id: 't048', content: '你遇到过最奇葩的领导是什么样的？', category: 'work', difficulty: 1 },
+  
+  // 职场类 - 中等
+  { id: 't049', content: '你有没有在公司偷偷做私事？', category: 'work', difficulty: 2 },
+  { id: 't050', content: '你有没有想过辞职？原因是什么？', category: 'work', difficulty: 2 },
+  { id: 't051', content: '你有没有在背后吐槽过领导？', category: 'work', difficulty: 2 },
+  { id: 't052', content: '你觉得你的工资配得上你的付出吗？', category: 'work', difficulty: 2 },
+  { id: 't053', content: '你有没有职场暗恋过谁？', category: 'work', difficulty: 2 },
+  
+  // 职场类 - 挑战
+  { id: 't054', content: '你在工作中做过最出格的事是什么？', category: 'work', difficulty: 3 },
+  { id: 't055', content: '你有没有抢过别人的功劳？', category: 'work', difficulty: 4 },
+  { id: 't056', content: '说出你工作中最想删掉的邮件/消息', category: 'work', difficulty: 4 },
+  
+  // 通用类
+  { id: 't057', content: '你最想改变自己什么？', category: 'mixed', difficulty: 1 },
+  { id: 't058', content: '你最骄傲的事情是什么？', category: 'mixed', difficulty: 1 },
+  { id: 't059', content: '你最想去的地方是哪里？', category: 'mixed', difficulty: 1 },
+  { id: 't060', content: '你有什么不为人知的才艺？', category: 'mixed', difficulty: 1 },
+  { id: 't061', content: '你最珍贵的东西是什么？', category: 'mixed', difficulty: 1 },
+  { id: 't062', content: '你最害怕失去什么？', category: 'mixed', difficulty: 2 },
+  { id: 't063', content: '你有没有后悔过的决定？', category: 'mixed', difficulty: 2 },
+  { id: 't064', content: '你觉得自己最大的缺点是什么？', category: 'mixed', difficulty: 2 },
+  { id: 't065', content: '你有没有嫉妒过别人？为什么？', category: 'mixed', difficulty: 3 },
+  { id: 't066', content: '你最想对过去的自己说什么？', category: 'mixed', difficulty: 3 },
+  { id: 't067', content: '你现在最大的压力来自哪里？', category: 'mixed', difficulty: 3 },
+  { id: 't068', content: '你有什么秘密从来没告诉过任何人？', category: 'mixed', difficulty: 5 },
+  { id: 't069', content: '如果明天是世界末日，你最想做什么？', category: 'mixed', difficulty: 2 },
+  { id: 't070', content: '你觉得在场谁最适合当你的好朋友？', category: 'mixed', difficulty: 2 },
+];
+
+// 根据难度和主题获取问题
+export function getTruthQuestion(options = {}) {
+  const { difficulty = 'standard', theme = 'mixed', usedIds = [] } = options;
+  
+  let filtered = truthQuestions.filter(q => !usedIds.includes(q.id));
+  
+  // 主题过滤
+  if (theme !== 'mixed') {
+    filtered = filtered.filter(q => q.category === theme || q.category === 'mixed');
+  }
+  
+  // 难度过滤
+  const difficultyMap = {
+    easy: [1, 2],
+    standard: [1, 2, 3],
+    hard: [2, 3, 4, 5],
+  };
+  const allowedDifficulties = difficultyMap[difficulty] || [1, 2, 3];
+  filtered = filtered.filter(q => allowedDifficulties.includes(q.difficulty));
+  
+  if (filtered.length === 0) {
+    // 如果没有可用问题，重置使用记录，只过滤主题
+    filtered = truthQuestions.filter(q => 
+      theme === 'mixed' || q.category === theme || q.category === 'mixed'
+    );
+  }
+  
+  // 随机选择
+  const randomIndex = Math.floor(Math.random() * filtered.length);
+  return filtered[randomIndex];
+}
