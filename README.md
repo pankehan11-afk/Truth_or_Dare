@@ -42,4 +42,4 @@ truth_or_dare/
 ├── vite.config.js
 └── tailwind.config.js
 ```
-可以在https://trruthoooodaar.netlify.app/上试玩
+点击试玩：https://trruthoooodaar.netlify.app/
