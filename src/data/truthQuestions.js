@@ -98,6 +98,28 @@ export const truthQuestions = [
   { id: 't068', content: '你有什么秘密从来没告诉过任何人？', category: 'mixed', difficulty: 5 },
   { id: 't069', content: '如果明天是世界末日，你最想做什么？', category: 'mixed', difficulty: 2 },
   { id: 't070', content: '你觉得在场谁最适合当你的好朋友？', category: 'mixed', difficulty: 2 },
+  { id: 't071', content: '你最想对未来的自己说什么？', category: 'mixed', difficulty: 3 },
+  { id: 't072', content: '你最想对过去的自己说什么？', category: 'mixed', difficulty: 3 },
+  { id: 't073', content: '你最想对现在的自己说什么？', category: 'mixed', difficulty: 3 },
+  { id: 't074', content: '你觉得什么行为浪费时间？', category: 'mixed', difficulty: 1 },
+  { id: 't075', content: '说出最难忘的旅游经历？', category: 'mixed', difficulty: 2 },
+  { id: 't076', content: '你听到别人对自己不好的评论有何感想？', category: 'mixed', difficulty: 2 },
+  { id: 't077', content: '遇到爱莫能助的事是什么？', category: 'mixed', difficulty: 2 },
+  { id: 't078', content: '最讨厌的蔬菜', category: 'mixed', difficulty: 1 },
+  { id: 't079', content: '会和不喜欢的人一起去玩吗？', category: 'mixed', difficulty: 2 },
+  { id: 't080', content: '如果能拥有超能力，你希望是什么？', category: 'mixed', difficulty: 1 },
+  { id: 't081', content: '曾经全力以赴的事情是什么？', category: 'mixed', difficulty: 2 },
+  { id: 't082', content: '如果有时光机，最想回到什么时候？', category: 'mixed', difficulty: 2 },
+  { id: 't083', content: '是否记得父母生日并送上祝福？', category: 'mixed', difficulty: 2 },
+  { id: 't084', content: '迄今为止说过最难听的话', category: 'mixed', difficulty: 3 },
+  { id: 't085', content: '会不会无缘无故讨厌一个人', category: 'mixed', difficulty: 2 },
+  { id: 't086', content: '钱是用来上学还是环游世界？', category: 'mixed', difficulty: 2 },
+  { id: 't087', content: '自己的努力被否定是什么感受？', category: 'mixed', difficulty: 3 },
+  { id: 't088', content: '什么事情让你笑得很假？', category: 'mixed', difficulty: 2 },
+  { id: 't089', content: '有什么事情对你产生极大的影响？', category: 'mixed', difficulty: 3 },
+  { id: 't090', content: '朋友惹你生气的事是什么', category: 'mixed', difficulty: 2 },
+  { id: 't091', content: '你最怀念的时光。', category: 'mixed', difficulty: 2 },
+  
 ];
 
 // 根据难度和主题获取问题
