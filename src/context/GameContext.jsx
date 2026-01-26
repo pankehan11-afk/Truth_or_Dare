@@ -61,6 +61,7 @@ const ACTION_TYPES = {
   ADD_PROP: 'ADD_PROP',
   RESET_GAME: 'RESET_GAME',
   TRIGGER_HIDDEN_TASK: 'TRIGGER_HIDDEN_TASK',
+  CLEAR_PLAYERS: 'CLEAR_PLAYERS',
 };
 
 // Reducer
@@ -231,6 +232,18 @@ function gameReducer(state, action) {
         })),
       };
     
+    case ACTION_TYPES.CLEAR_PLAYERS:
+      return {
+        ...state,
+        players: [],
+      };
+    
+    case ACTION_TYPES.CLEAR_PLAYERS:
+      return {
+        ...state,
+        players: [],
+      };
+    
     default:
       return state;
   }
@@ -262,6 +275,7 @@ export function GameProvider({ children }) {
     resetGame: () => dispatch({ type: ACTION_TYPES.RESET_GAME }),
     triggerHiddenTask: () => dispatch({ type: ACTION_TYPES.TRIGGER_HIDDEN_TASK }),
     endGame: () => dispatch({ type: ACTION_TYPES.SET_PHASE, payload: GAME_PHASES.GAME_SUMMARY }),
+    clearPlayers: () => dispatch({ type: ACTION_TYPES.CLEAR_PLAYERS }),
   };
 
   // 获取当前玩家

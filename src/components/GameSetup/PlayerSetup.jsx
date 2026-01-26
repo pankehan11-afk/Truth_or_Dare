@@ -94,12 +94,12 @@ export default function PlayerSetup() {
             </span>
             {state.players.length < 4 && (
               <span className="text-amber-500 text-sm">
-                还需 {4 - state.players.length} 人
+                至少还需 {4 - state.players.length} 人
               </span>
             )}
           </div>
           
-          <div className="space-y-2 max-h-64 overflow-y-auto">
+          <div className="space-y-2 h-64 max-h-64 overflow-y-auto border border-gray-200 rounded-xl p-2">
             <AnimatePresence>
               {state.players.map((player, index) => (
                 <motion.div
@@ -131,7 +131,7 @@ export default function PlayerSetup() {
             </AnimatePresence>
 
             {state.players.length === 0 && (
-              <div className="text-center py-8 text-gray-400">
+              <div className="text-center py-24 text-gray-400">
                 <div className="text-4xl mb-2">🎭</div>
                 <p>还没有玩家，快添加吧！</p>
               </div>
@@ -143,7 +143,7 @@ export default function PlayerSetup() {
         <div className="mb-6">
           <p className="text-gray-500 text-sm mb-2">快速添加：</p>
           <div className="flex flex-wrap gap-2">
-            {['玩家A', '玩家B', '玩家C', '玩家D', '玩家E'].map((name) => (
+            {['玩家A', '玩家B', '玩家C', '玩家D', '玩家E', '玩家F', '玩家G', '玩家H'].map((name) => (
               <motion.button
                 key={name}
                 whileHover={{ scale: 1.05 }}
@@ -168,7 +168,10 @@ export default function PlayerSetup() {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => actions.setPhase(GAME_PHASES.WELCOME)}
+            onClick={() => {
+              actions.clearPlayers();
+              actions.setPhase(GAME_PHASES.WELCOME);
+            }}
             className="flex-1 py-3 border-2 border-gray-200 text-gray-600 
                        font-semibold rounded-xl hover:bg-gray-50"
           >
