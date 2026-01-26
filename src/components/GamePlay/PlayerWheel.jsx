@@ -5,9 +5,11 @@ import { useGame } from '../../context/GameContext';
 export default function PlayerWheel() {
   const { state, actions, checkGameEnd, getLeaderboard } = useGame();
   const [isSpinning, setIsSpinning] = useState(false);
+  const [isSelected, setIsSelected] = useState(false); // 已选中等待跳转
   const [rotation, setRotation] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const spinTimeout = useRef(null);
+  const jumpTimeout = useRef(null);
 
   const players = state.players;
   const segmentAngle = 360 / players.length;
@@ -45,13 +47,15 @@ export default function PlayerWheel() {
     
     setRotation(totalRotation);
 
-    // 旋转结束后
+    // 旋转结束后显示选中结果
     spinTimeout.current = setTimeout(() => {
       setIsSpinning(false);
+      setIsSelected(true);
       setSelectedIndex(randomIndex);
       
-      // 短暂延迟后进入下一阶段
-      setTimeout(() => {
+      // 1.5秒后跳转到选题阶段
+      jumpTimeout.current = setTimeout(() => {
+        setIsSelected(false);
         actions.setCurrentPlayer(randomIndex);
       }, 1500);
     }, 4000);
@@ -62,6 +66,9 @@ export default function PlayerWheel() {
     return () => {
       if (spinTimeout.current) {
         clearTimeout(spinTimeout.current);
+      }
+      if (jumpTimeout.current) {
+        clearTimeout(jumpTimeout.current);
       }
     };
   }, []);
@@ -248,16 +255,16 @@ export default function PlayerWheel() {
 
         {/* 开始按钮 */}
         <motion.button
-          whileHover={{ scale: isSpinning ? 1 : 1.05 }}
-          whileTap={{ scale: isSpinning ? 1 : 0.95 }}
+          whileHover={{ scale: (isSpinning || isSelected) ? 1 : 1.05 }}
+          whileTap={{ scale: (isSpinning || isSelected) ? 1 : 0.95 }}
           onClick={startSpin}
-          disabled={isSpinning}
+          disabled={isSpinning || isSelected}
           className={`w-full py-4 font-bold text-xl rounded-2xl shadow-lg transition-all
-                     ${isSpinning 
+                     ${(isSpinning || isSelected)
                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
                        : 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white'}`}
         >
-          {isSpinning ? '🎲 转动中...' : '开始抽人 🚀'}
+          {isSpinning ? '🎲 转动中...' : isSelected ? '✨ 选中幸运儿' : '开始抽人 🚀'}
         </motion.button>
 
         {/* 积分榜预览 */}
