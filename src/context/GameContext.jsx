@@ -7,6 +7,7 @@ export const GAME_PHASES = {
   GAME_CONFIG: 'game_config',   // 游戏配置
   PLAYER_CONFIRM: 'player_confirm', // 参与者确认
   SPINNING: 'spinning',         // 转盘选人
+  PROP_DRAW: 'prop_draw',       // 道具抽取
   CHALLENGE_SELECT: 'challenge_select', // 选择真心话/大冒险
   CHALLENGE_DISPLAY: 'challenge_display', // 显示挑战内容
   VOTING: 'voting',             // 投票确认
@@ -15,10 +16,10 @@ export const GAME_PHASES = {
 
 // 道具类型
 export const PROP_TYPES = {
-  REVERSE: { id: 'reverse', name: '反转卡', description: '让提问者回答这个问题', icon: '🔄' },
-  PROTECT: { id: 'protect', name: '保护卡', description: '跳过本轮挑战', icon: '🛡️' },
-  DOUBLE: { id: 'double', name: '双倍卡', description: '本轮积分×2', icon: '✨' },
+  REVERSE: { id: 'reverse', name: '反转卡', description: '指定他人回答这个问题', icon: '🔄' },
+  PROTECT: { id: 'protect', name: '保护卡', description: '跳过一轮挑战', icon: '🛡️' },
   TROUBLE: { id: 'trouble', name: '捣乱卡', description: '指定他人完成额外任务', icon: '😈' },
+  LUCKY: { id: 'lucky', name: '幸运卡', description: '跳过一轮真心话', icon: '🍀' },
 };
 
 // 初始状态
@@ -150,13 +151,22 @@ function gameReducer(state, action) {
       const doubleActive = state.activeProps.some(p => p.type === 'double');
       const finalPoints = doubleActive ? points * 2 : points;
       
+      // 计算加分前后的分数
+      const oldScore = currentPlayer.score;
+      const newScore = oldScore + finalPoints;
+      
+      // 检查是否跨越了10分的倍数（每次达到10分的倍数都可以抽取道具）
+      const oldMilestone = Math.floor(oldScore / 10);
+      const newMilestone = Math.floor(newScore / 10);
+      const shouldDrawProp = newMilestone > oldMilestone && newScore >= 10;
+      
       return {
         ...state,
         players: state.players.map(p =>
           p.id === currentPlayer.id
             ? {
                 ...p,
-                score: p.score + finalPoints,
+                score: newScore,
                 completedChallenges: skipped ? p.completedChallenges : p.completedChallenges + 1,
                 skippedChallenges: skipped ? p.skippedChallenges + 1 : p.skippedChallenges,
                 funnyVotes: p.funnyVotes + (funnyBonus ? 1 : 0),
@@ -175,7 +185,7 @@ function gameReducer(state, action) {
         currentChallenge: null,
         challengeType: null,
         votes: {},
-        phase: GAME_PHASES.SPINNING,
+        phase: shouldDrawProp ? GAME_PHASES.PROP_DRAW : GAME_PHASES.SPINNING,
         hiddenTaskTriggered: false,
       };
     }
@@ -202,12 +212,27 @@ function gameReducer(state, action) {
       };
     
     case ACTION_TYPES.ADD_PROP: {
-      const propTypes = Object.keys(PROP_TYPES);
-      const randomProp = propTypes[Math.floor(Math.random() * propTypes.length)].toLowerCase();
+      // payload 可以是 { playerId, propType } 或者只是 playerId
+      const { playerId, propType } = typeof action.payload === 'object' 
+        ? action.payload 
+        : { playerId: action.payload, propType: null };
+      
+      let selectedProp = propType;
+      if (!selectedProp) {
+        const propTypes = Object.keys(PROP_TYPES);
+        selectedProp = propTypes[Math.floor(Math.random() * propTypes.length)].toLowerCase();
+      }
+      
       return {
         ...state,
         players: state.players.map(p =>
-          p.id === action.payload ? { ...p, props: [...p.props, randomProp] } : p
+          p.id === playerId 
+            ? { 
+                ...p, 
+                props: [...p.props, selectedProp],
+                score: p.score - 10  // 抽取道具后扣除10分
+              } 
+            : p
         ),
       };
     }
@@ -271,7 +296,7 @@ export function GameProvider({ children }) {
     completeRound: (result) => dispatch({ type: ACTION_TYPES.COMPLETE_ROUND, payload: result }),
     useSkipCard: () => dispatch({ type: ACTION_TYPES.USE_SKIP_CARD }),
     useProp: (playerId, type) => dispatch({ type: ACTION_TYPES.USE_PROP, payload: { playerId, type } }),
-    addProp: (playerId) => dispatch({ type: ACTION_TYPES.ADD_PROP, payload: playerId }),
+    addProp: (playerId, propType = null) => dispatch({ type: ACTION_TYPES.ADD_PROP, payload: propType ? { playerId, propType } : playerId }),
     resetGame: () => dispatch({ type: ACTION_TYPES.RESET_GAME }),
     triggerHiddenTask: () => dispatch({ type: ACTION_TYPES.TRIGGER_HIDDEN_TASK }),
     endGame: () => dispatch({ type: ACTION_TYPES.SET_PHASE, payload: GAME_PHASES.GAME_SUMMARY }),

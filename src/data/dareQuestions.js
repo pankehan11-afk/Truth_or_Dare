@@ -109,7 +109,7 @@ export const dareQuestions = [
   { id: 'd079', content: '接下来三轮只能用点头或摇头回应', category: 'punishment', difficulty: 2, duration: 0 },
   { id: 'd080', content: '给下一个被选中的人出一道题', category: 'punishment', difficulty: 2, duration: 30 },
   { id: 'd081', content: '分享你手机壁纸的故事', category: 'punishment', difficulty: 2, duration: 30 },
-  { id: 'd082', content: '展示你手机里最近删除的照片（如果有的话）', category: 'punishment', difficulty: 3, duration: 20 },
+  { id: 'd082', content: '展示你手机里最近删除的照片', category: 'punishment', difficulty: 3, duration: 20 },
   { id: 'd083', content: '背对地板躺下，不用手站起来', category: 'punishment', difficulty: 3, duration: 45 },
   { id: 'd084', content: '群发给别人"我是明星"', category: 'punishment', difficulty: 4, duration: 30 },
   { id: 'd085', content: '唱死了都要爱发朋友圈', category: 'punishment', difficulty: 4, duration: 40 },
@@ -154,10 +154,9 @@ export function getDareQuestion(options = {}) {
 // 隐藏任务
 export const hiddenTasks = [
   { id: 'h001', content: '全员挑战：每个人用一句话夸奖自己', type: 'all_participate' },
-  { id: 'h002', content: '积分翻倍轮！本轮所有人的投票分数×2', type: 'double_points' },
-  { id: 'h003', content: '连环挑战：当前玩家完成后，指定下一个人继续', type: 'chain' },
-  { id: 'h004', content: '团队合作：两两组队完成一个双人任务', type: 'team' },
-  { id: 'h005', content: '真心话时刻：所有人轮流说一件今天发生的事', type: 'all_truth' },
+  { id: 'h002', content: '连环挑战：玩家右手边的人再被他人指定完成一个挑战/真心话', type: 'chain' },
+  { id: 'h003', content: '团队合作：两两组队完成一个双人任务', type: 'team' },
+  { id: 'h004', content: '真心话时刻：所有人轮流说一件今天发生的事', type: 'all_truth' },
 ];
 
 export function getHiddenTask() {

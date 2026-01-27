@@ -127,7 +127,7 @@ export default function PlayerWheel() {
     ? Math.min(100, ((Date.now() - state.gameStartTime) / 1000 / 60 / state.config.duration) * 100)
     : 0;
 
-  const leaderboard = getLeaderboard().slice(0, 3);
+  const leaderboard = getLeaderboard();
 
   return (
     <motion.div
@@ -271,11 +271,11 @@ export default function PlayerWheel() {
         {leaderboard.length > 0 && leaderboard[0].score > 0 && (
           <div className="mt-6 p-4 bg-gray-50 rounded-xl">
             <h3 className="font-semibold text-gray-700 mb-2">🏆 当前排名</h3>
-            <div className="space-y-1">
+            <div className="space-y-1 max-h-40 overflow-y-auto">
               {leaderboard.map((player, index) => (
                 <div key={player.id} className="flex justify-between text-sm">
                   <span className="text-gray-600">
-                    {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'} {player.name}
+                    {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`} {player.name}
                   </span>
                   <span className="font-semibold text-indigo-600">{player.score}分</span>
                 </div>
