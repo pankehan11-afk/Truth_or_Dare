@@ -1,6 +1,7 @@
 # 🎭 真心话大冒险 (Truth or Dare)
 
 一款基于 React 构建的现代化真心话大冒险派对游戏，支持多人同屏互动，拥有精美的 UI 动画和丰富的游戏机制。
+https://trurhordare-v2.netlify.app/
 
 ## ✨ 功能特性
 
