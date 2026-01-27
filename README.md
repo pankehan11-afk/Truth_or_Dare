@@ -122,10 +122,4 @@ npm run preview
 5. **结算积分** - 其他玩家投票评价
 6. **游戏结束** - 查看最终排名
 
-## 📄 License
 
-MIT License
-
----
-
-Made with ❤️ using React + Vite + Tailwind CSS
