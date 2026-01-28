@@ -41,9 +41,9 @@ export default function ChallengeDisplay() {
 
   // 使用跳过卡
   const handleSkip = () => {
-    if (currentPlayer.skipCards > 0) {
+    if (currentPlayer.skipCards > 0 && currentPlayer.score >= 5) {
       actions.useSkipCard();
-      actions.completeRound({ skipped: true, points: -1, funnyBonus: false });
+      actions.completeRound({ skipped: true, points: -2, funnyBonus: false });
     }
   };
 
@@ -259,15 +259,30 @@ export default function ChallengeDisplay() {
               ✅ 挑战完成
             </motion.button>
 
+            {/* 大冒险失败按钮 */}
+            {state.challengeType === 'dare' && (
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  actions.completeRound({ skipped: false, points: -4, funnyBonus: false });
+                }}
+                className="w-full py-3 bg-gradient-to-r from-red-500 to-rose-600 
+                           text-white font-bold text-lg rounded-2xl shadow-lg"
+              >
+                ❌ 大冒险失败
+              </motion.button>
+            )}
+
             {/* 跳过和道具 */}
             <div className="flex gap-3">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSkip}
-                disabled={currentPlayer.skipCards <= 0}
+                disabled={currentPlayer.skipCards <= 0 || currentPlayer.score < 5}
                 className={`flex-1 py-3 rounded-xl font-semibold transition-all
-                           ${currentPlayer.skipCards > 0
+                           ${(currentPlayer.skipCards > 0 && currentPlayer.score >= 5)
                              ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                              : 'bg-gray-50 text-gray-300 cursor-not-allowed'}`}
               >

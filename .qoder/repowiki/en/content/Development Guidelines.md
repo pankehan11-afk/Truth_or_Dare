@@ -2,6 +2,7 @@
 
 <cite>
 **Referenced Files in This Document**
+- [.gitignore](file://.gitignore)
 - [package.json](file://package.json)
 - [vite.config.js](file://vite.config.js)
 - [eslint.config.js](file://eslint.config.js)
@@ -19,6 +20,13 @@
 - [src/data/dareQuestions.js](file://src/data/dareQuestions.js)
 - [src/index.css](file://src/index.css)
 </cite>
+
+## Update Summary
+**Changes Made**
+- Enhanced deployment section to reflect improved Chinese documentation in README.md
+- Added comprehensive deployment instructions covering local development, static file building, and Netlify deployment
+- Updated build configuration section with specific Vite commands and build outputs
+- Expanded troubleshooting section with deployment-specific guidance
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -358,9 +366,22 @@ Common development issues and solutions:
 - **ESLint Errors**: Run linting to identify and fix issues
 - **Tailwind CSS**: Verify content paths and purge configuration
 
+### Version Control Issues
+- **Git Ignore Conflicts**: Ensure .gitignore patterns match project structure
+- **Unintended File Tracking**: Verify dependencies and build outputs are properly excluded
+- **Environment Variable Exposure**: Check .env files are properly ignored
+
+### Deployment Issues
+- **Build Failures**: Verify Vite configuration and dependency installation
+- **Static File Generation**: Check output directory structure and file permissions
+- **Netlify Deployment**: Ensure build command and publish directory are correctly configured
+
+**Updated** Enhanced troubleshooting section to include deployment-specific guidance and .gitignore-related issues
+
 **Section sources**
 - [src/context/GameContext.jsx](file://src/context/GameContext.jsx#L301-L307)
 - [eslint.config.js](file://eslint.config.js#L25-L27)
+- [.gitignore](file://.gitignore#L1-L38)
 
 ## Code Review and Contribution Guidelines
 
@@ -383,7 +404,6 @@ Common development issues and solutions:
 - **Manual Testing**: Cross-browser compatibility and mobile responsiveness
 
 ## Development Workflow and Version Control
-Recommended Git workflow:
 
 ### Branching Strategy
 - **main**: Production-ready code
@@ -402,6 +422,42 @@ Recommended Git workflow:
 3. Update CHANGELOG.md
 4. Deploy to production environment
 
+### Enhanced .gitignore Configuration
+The project now utilizes an enhanced .gitignore configuration that provides comprehensive file exclusion patterns:
+
+#### Log Files Management
+- **Log Directories**: `logs/` directory for application logs
+- **Log File Patterns**: `*.log` for general log files
+- **Package Manager Logs**: npm-debug.log*, yarn-debug.log*, yarn-error.log*, pnpm-debug.log*, lerna-debug.log*
+
+#### Dependency Exclusion
+- **Node Modules**: `node_modules/` for installed dependencies
+- **Build Output**: `dist/` and `dist-ssr/` for production builds
+- **Local Files**: `*.local` for temporary local files
+
+#### Editor and IDE Integration
+- **VS Code**: `.vscode/` with extensions.json preserved
+- **IntelliJ/WebStorm**: `.idea/` directory
+- **OS Generated Files**: `.DS_Store`, `Thumbs.db`, and various IDE-specific files
+
+#### Build Output Management
+- **Production Builds**: `dist/` for final production output
+- **Development Builds**: `build/` for development server output
+
+#### Environment Variable Security
+- **Environment Files**: `.env` for base environment variables
+- **Local Overrides**: `.env.local` and `.env.*.local` for environment-specific overrides
+
+#### Operating System Files
+- **Windows Thumbnails**: `Thumbs.db` for Windows thumbnail cache
+- **Mac Metadata**: `.DS_Store` for macOS directory metadata
+
+**Updated** Added comprehensive .gitignore configuration section with specific patterns and security considerations
+
+**Section sources**
+- [.gitignore](file://.gitignore#L1-L38)
+- [package.json](file://package.json#L6-L11)
+
 ## Build Configuration and Deployment
 
 ### Vite Configuration
@@ -411,6 +467,25 @@ The build system is configured for optimal development and production performanc
 - **Optimization**: Tree shaking and code splitting enabled
 - **Environment Variables**: Support for process.env.* usage
 
+### Enhanced Deployment Instructions
+The project now includes comprehensive deployment documentation with Chinese instructions covering multiple deployment scenarios:
+
+#### Local Development Deployment
+- **Development Server**: Run `npm run dev` to start Vite development server
+- **Access URL**: Open `http://localhost:5173` in browser
+- **Hot Reload**: Automatic page refresh on code changes
+
+#### Static File Building
+- **Build Command**: Execute `npm run build` to generate production-ready static files
+- **Output Directory**: Creates `dist/` folder containing optimized static assets
+- **Preview Build**: Use `npm run preview` to test production build locally
+
+#### Netlify Deployment
+- **Build Process**: Run `npm run build` to generate static files
+- **Deployment Method**: Drag and drop `dist/` folder to netlify.com
+- **Automatic Deployment**: Netlify automatically serves the static files
+- **Live URL**: Receive deployment link immediately after upload
+
 ### Production Optimization
 - **Bundle Analysis**: Built-in bundle analyzer for optimization insights
 - **Asset Optimization**: Image compression and font optimization
@@ -418,15 +493,18 @@ The build system is configured for optimal development and production performanc
 - **Code Splitting**: Dynamic imports for route-based loading
 
 ### Deployment Preparation
-1. **Build Verification**: Run production build locally
+1. **Build Verification**: Run production build locally with `npm run build`
 2. **Performance Audit**: Analyze bundle size and load times
 3. **Accessibility Testing**: Screen reader and keyboard navigation
 4. **Cross-Browser Testing**: Chrome, Firefox, Safari, Edge compatibility
 5. **Mobile Responsiveness**: Touch device testing and viewport optimization
 
+**Updated** Added comprehensive deployment section with specific instructions from the enhanced README.md
+
 **Section sources**
 - [vite.config.js](file://vite.config.js#L1-L8)
 - [package.json](file://package.json#L6-L11)
+- [README.md](file://README.md#L1-L20)
 
 ## Testing and Debugging
 
@@ -452,4 +530,4 @@ The build system is configured for optimal development and production performanc
 - [eslint.config.js](file://eslint.config.js#L1-L30)
 
 ## Conclusion
-The Truth or Dare application demonstrates modern React development practices with clean architecture, efficient state management, and comprehensive tooling. The guidelines established here provide a foundation for maintaining code quality, ensuring performance, and facilitating collaborative development. By following these standards, contributors can effectively extend the application while maintaining its architectural integrity and user experience quality.
+The Truth or Dare application demonstrates modern React development practices with clean architecture, efficient state management, and comprehensive tooling. The enhanced .gitignore configuration ensures proper version control hygiene by systematically excluding dependencies, build artifacts, environment variables, and OS-generated files. The comprehensive deployment documentation in README.md provides clear step-by-step instructions for local development, static file building, and Netlify deployment, making it accessible to developers who prefer Chinese documentation. The guidelines established here provide a foundation for maintaining code quality, ensuring performance, and facilitating collaborative development. By following these standards, contributors can effectively extend the application while maintaining its architectural integrity and user experience quality.

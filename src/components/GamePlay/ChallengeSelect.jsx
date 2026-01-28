@@ -184,7 +184,7 @@ export default function ChallengeSelect() {
           {currentPlayer.props.length > 0 && (
             <div className="mt-2 text-sm text-gray-600">
               🎁 道具：{currentPlayer.props.map(p => 
-                p === 'reverse' ? '🔄' : p === 'protect' ? '🛡️' : p === 'double' ? '✨' : '😈'
+                p === 'reverse' ? '🔄' : p === 'protect' ? '🛡️' : p === 'trouble' ? '😈' : '🍀'
               ).join(' ')}
             </div>
           )}

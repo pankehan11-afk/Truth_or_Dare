@@ -27,12 +27,13 @@ export default function GameSummary() {
   };
 
   const handlePlayAgain = () => {
+    // 保留玩家列表，只重置游戏数据
     actions.resetGame();
     actions.setPhase(GAME_PHASES.PLAYER_SETUP);
   };
 
   const handleNewGame = () => {
-    actions.resetGame();
+    actions.clearPlayers();
     actions.setPhase(GAME_PHASES.WELCOME);
   };
 

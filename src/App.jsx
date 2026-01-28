@@ -7,6 +7,7 @@ import PlayerConfirm from './components/GameSetup/PlayerConfirm';
 import PlayerWheel from './components/GamePlay/PlayerWheel';
 import ChallengeSelect from './components/GamePlay/ChallengeSelect';
 import ChallengeDisplay from './components/GamePlay/ChallengeDisplay';
+import PropDraw from './components/GamePlay/PropDraw';
 import GameSummary from './components/Results/GameSummary';
 import './index.css';
 
@@ -25,6 +26,8 @@ function GameRouter() {
         return <PlayerConfirm key="player-confirm" />;
       case GAME_PHASES.SPINNING:
         return <PlayerWheel key="spinning" />;
+      case GAME_PHASES.PROP_DRAW:
+        return <PropDraw key="prop-draw" />;
       case GAME_PHASES.CHALLENGE_SELECT:
         return <ChallengeSelect key="challenge-select" />;
       case GAME_PHASES.CHALLENGE_DISPLAY:

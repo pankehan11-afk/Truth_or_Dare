@@ -119,6 +119,8 @@ export const truthQuestions = [
   { id: 't089', content: '有什么事情对你产生极大的影响？', category: 'mixed', difficulty: 3 },
   { id: 't090', content: '朋友惹你生气的事是什么', category: 'mixed', difficulty: 2 },
   { id: 't091', content: '你最怀念的时光。', category: 'mixed', difficulty: 2 },
+  { id: 't044', content: '你理想的工作是什么？', category: 'mixed', difficulty: 1 },
+  { id: 't055', content: '你有没有抢过别人的功劳？', category: 'mixed', difficulty: 4 },
   
 ];
 
@@ -131,12 +133,15 @@ export function getTruthQuestion(options = {}) {
   // 主题过滤
   if (theme !== 'mixed') {
     filtered = filtered.filter(q => q.category === theme || q.category === 'mixed');
+  } else {
+    // 混合模式下过滤掉 work 类
+    filtered = filtered.filter(q => q.category !== 'work');
   }
   
   // 难度过滤
   const difficultyMap = {
     easy: [1, 2],
-    standard: [1, 2, 3],
+    standard: [1, 2, 3,4,5],
     hard: [2, 3, 4, 5],
   };
   const allowedDifficulties = difficultyMap[difficulty] || [1, 2, 3];
@@ -145,7 +150,9 @@ export function getTruthQuestion(options = {}) {
   if (filtered.length === 0) {
     // 如果没有可用问题，重置使用记录，只过滤主题
     filtered = truthQuestions.filter(q => 
-      theme === 'mixed' || q.category === theme || q.category === 'mixed'
+      theme === 'mixed' 
+        ? q.category !== 'work' 
+        : (q.category === theme || q.category === 'mixed')
     );
   }
   

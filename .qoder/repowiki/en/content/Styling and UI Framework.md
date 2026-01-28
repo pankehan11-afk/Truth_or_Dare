@@ -18,6 +18,13 @@
 - [src/data/dareQuestions.js](file://src/data/dareQuestions.js)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Enhanced PlayerWheel component documentation with improved animation timing and visual feedback system
+- Updated selection announcement animations section with bounce-in timing details
+- Added state-based button styling documentation for disabled/enabled states
+- Improved animation timing explanations for wheel spin and selection reveal
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
@@ -86,7 +93,7 @@ IndexCSS --> Summary
 - [src/context/GameContext.jsx](file://src/context/GameContext.jsx#L1-L308)
 - [src/components/GameSetup/WelcomePage.jsx](file://src/components/GameSetup/WelcomePage.jsx#L1-L88)
 - [src/components/GameSetup/PlayerSetup.jsx](file://src/components/GameSetup/PlayerSetup.jsx#L1-L194)
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L293)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L300)
 - [src/components/GamePlay/ChallengeSelect.jsx](file://src/components/GamePlay/ChallengeSelect.jsx#L1-L201)
 - [src/components/GamePlay/ChallengeDisplay.jsx](file://src/components/GamePlay/ChallengeDisplay.jsx#L1-L341)
 - [src/components/Results/GameSummary.jsx](file://src/components/Results/GameSummary.jsx#L1-L223)
@@ -166,7 +173,7 @@ Phase-->>User : Updated UI with animations
   - Button hover-scale effect with transition and active press-down transform.
 
 Responsive patterns:
-- Mobile-first approach using Tailwind’s responsive prefixes (e.g., md: for medium screens).
+- Mobile-first approach using Tailwind's responsive prefixes (e.g., md: for medium screens).
 - Consistent padding and spacing scales across breakpoints.
 
 Accessibility:
@@ -210,25 +217,44 @@ Animation timing:
 **Section sources**
 - [src/components/GameSetup/PlayerSetup.jsx](file://src/components/GameSetup/PlayerSetup.jsx#L37-L193)
 
-### Player Wheel (Spinning Phase)
+### Player Wheel (Enhanced Spinning Phase)
+**Updated** Enhanced with improved animation timing and visual feedback system
+
 - Centralized animation orchestration for wheel rotation with a long-duration cubic-bezier easing curve.
 - SVG-based wheel with dynamic gradients per segment; text labels auto-truncate for readability.
 - Progress bar tracks game duration with motion-driven width animation.
-- Selected player announcement uses bounce-in animation.
-- Disabled button during spin; re-enabled after timeout.
-- Leaderboard preview highlights top scorers.
+- **Enhanced** Selection announcement uses bounce-in animation with precise timing control.
+- **Improved** State-based button styling with conditional disabled/enabled states and visual feedback.
+- **Optimized** Animation timing: wheel spin lasts 4 seconds with easing tailored for deceleration.
+- **Refined** Selection reveal with 1.5-second delay before transitioning to challenge phase.
+- Disabled button during spin; re-enabled after timeout with proper state management.
+- Leaderboard preview highlights top scorers with conditional visibility.
+
+**Enhanced Animation System**:
+- Wheel spin: 4-second duration with cubic-bezier(0.17, 0.67, 0.12, 0.99) easing for realistic deceleration
+- Selection announcement: bounce-in animation using custom CSS keyframes with 0.5-second duration
+- Button state transitions: immediate visual feedback with hover/tap scaling and disabled styling
+- Progress indicator: smooth width animation with motion primitives
+
+**State Management Improvements**:
+- `isSpinning`: controls wheel rotation and button disabled state
+- `isSelected`: manages selection announcement visibility and button state
+- `selectedIndex`: stores winning player index for display and transition
+- Proper cleanup of timeouts to prevent memory leaks
 
 Responsive behavior:
 - Fixed container size with proportional SVG sizing; md: paddings increase.
 
 Animation timing:
-- Wheel spin lasts approximately 4 seconds with easing tailored for deceleration.
-- Selection announcement uses a short bounce-in animation.
+- Wheel spin lasts 4 seconds with sophisticated easing curve for realistic physics.
+- Selection announcement uses bounce-in animation with 0.5-second duration.
+- Transition delay of 1.5 seconds between selection reveal and phase change.
 
 **Section sources**
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L28-L58)
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L166-L233)
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L235-L247)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L31-L62)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L174-L181)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L243-L254)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L257-L268)
 
 ### Challenge Select
 - Countdown timer with color change when time is low.
@@ -324,21 +350,32 @@ Components --> Animations["Transitions & Micro-interactions"]
 - Limit heavy CSS filters (e.g., blur) to essential cases; backdrop-filter is used sparingly on cards.
 - Avoid animating layout-affecting properties (width, height) when possible; use transforms instead.
 - Use motion variants (whileHover, whileTap) for lightweight interactivity; reserve complex timelines for key moments.
-
-[No sources needed since this section provides general guidance]
+- **Enhanced** Proper cleanup of animation timeouts and event listeners to prevent memory leaks.
+- **Optimized** CSS keyframe animations for consistent performance across different devices.
 
 ## Troubleshooting Guide
 Common styling and animation issues:
 - Animations not triggering: ensure AnimatePresence wraps the root of each phase and keys are unique per phase.
 - Tailwind utilities not applied: verify content paths in Tailwind config include the relevant files.
 - Hover/scale effects not smooth: confirm transition classes are present and not overridden by later styles.
-- SVG wheel rotation feels off: review easing curves and ensure consistent duration across spin cycles.
-- Text truncation: adjust truncation thresholds based on number of players and screen size.
+- **Enhanced** SVG wheel rotation feels off: review easing curves and ensure consistent duration across spin cycles.
+- **Improved** Selection announcement timing: verify bounce-in animation duration matches component state transitions.
+- **Fixed** Button state issues: ensure disabled/enabled states properly reflect component state.
+- **Optimized** Animation performance: monitor for excessive reflows and consider reducing animation complexity.
 
 **Section sources**
 - [src/App.jsx](file://src/App.jsx#L40-L44)
 - [tailwind.config.js](file://tailwind.config.js#L3-L6)
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L171-L174)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L174-L181)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L257-L268)
 
 ## Conclusion
 The Truth or Dare application employs a clean, utility-first styling approach powered by Tailwind CSS and PostCSS, complemented by Framer Motion for fluid animations and transitions. The design is mobile-first, responsive, and visually consistent across game phases through shared utilities, color variables, and animation patterns. Interactive elements are intuitive, and performance is optimized through transform-based animations and careful use of visual effects.
+
+**Enhanced Features**:
+- Sophisticated animation timing system with precise control over wheel spin and selection reveal
+- Improved visual feedback through state-based button styling and enhanced selection announcements
+- Optimized performance with proper cleanup and efficient animation techniques
+- Refined user experience through better timing and responsive design patterns
+
+The PlayerWheel component now provides a polished, professional gaming experience with carefully crafted animations and smooth state transitions that enhance the overall gameplay flow.

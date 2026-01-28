@@ -123,7 +123,8 @@ export default function PlayerConfirm() {
           <ul className="text-sm text-gray-600 space-y-1">
             <li>• 真心话完成：+2分</li>
             <li>• 大冒险完成：+3分</li>
-            <li>• 使用跳过卡：-1分</li>
+            <li>• 大冒险失败：-4分</li>
+            <li>• 使用跳过卡：-2分（需积分≥5分）</li>
             <li>• 获得"有趣"投票：额外+1分</li>
             <li>• 累计10分可抽取道具卡</li>
           </ul>

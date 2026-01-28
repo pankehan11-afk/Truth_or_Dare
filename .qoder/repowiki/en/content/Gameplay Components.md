@@ -14,6 +14,13 @@
 - [GameSummary.jsx](file://src/components/Results/GameSummary.jsx)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Updated PlayerWheel component analysis to reflect new isSelected state and enhanced visual feedback system
+- Added documentation for 1.5-second delay mechanism for selected player display
+- Updated timeout management section to cover separate spinTimeout and jumpTimeout handling
+- Enhanced component lifecycle documentation with improved state control
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
@@ -73,7 +80,7 @@ TW --> CSS
 
 **Diagram sources**
 - [App.jsx](file://src/App.jsx#L13-L45)
-- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L293)
+- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L300)
 - [ChallengeSelect.jsx](file://src/components/GamePlay/ChallengeSelect.jsx#L1-L201)
 - [ChallengeDisplay.jsx](file://src/components/GamePlay/ChallengeDisplay.jsx#L1-L341)
 - [GameContext.jsx](file://src/context/GameContext.jsx#L1-L308)
@@ -88,17 +95,17 @@ TW --> CSS
 - [GameContext.jsx](file://src/context/GameContext.jsx#L1-L308)
 
 ## Core Components
-- PlayerWheel: Handles player spinning animation, winner selection, and transitions to the next phase.
+- PlayerWheel: Handles player spinning animation, winner selection, and transitions to the next phase with enhanced visual feedback and improved state control.
 - ChallengeSelect: Presents truth/dare selection with countdown and automatic selection fallback.
 - ChallengeDisplay: Manages challenge presentation, timing, voting, and scoring mechanics.
 
 **Section sources**
-- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L293)
+- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L300)
 - [ChallengeSelect.jsx](file://src/components/GamePlay/ChallengeSelect.jsx#L1-L201)
 - [ChallengeDisplay.jsx](file://src/components/GamePlay/ChallengeDisplay.jsx#L1-L341)
 
 ## Architecture Overview
-The system follows a centralized state management pattern using React’s useReducer and context. Components communicate through GameContext actions and subscribe to state changes. Animations leverage Framer Motion for smooth transitions and micro-interactions. Tailwind CSS provides responsive styling and theming.
+The system follows a centralized state management pattern using React's useReducer and context. Components communicate through GameContext actions and subscribe to state changes. Animations leverage Framer Motion for smooth transitions and micro-interactions. Tailwind CSS provides responsive styling and theming.
 
 ```mermaid
 sequenceDiagram
@@ -134,20 +141,22 @@ Context-->>Display : Next round starts (spinning)
 ## Detailed Component Analysis
 
 ### PlayerWheel Component
-The PlayerWheel component manages the spinning animation, winner selection, and round progression. It calculates segment angles for each player, generates gradient-filled SVG segments, and animates rotation with easing. After the spin completes, it sets the current player and transitions to the next phase.
+The PlayerWheel component manages the spinning animation, winner selection, and round progression with enhanced visual feedback and improved state control. It calculates segment angles for each player, generates gradient-filled SVG segments, and animates rotation with easing. After the spin completes, it sets the current player and transitions to the next phase with a 1.5-second delay for better user experience.
+
+**Updated** Enhanced with new isSelected state and improved visual feedback system
 
 Key behaviors:
 - Lifecycle hooks:
   - Effect checks for game end on round changes.
-  - Cleanup clears timeouts on unmount.
+  - Cleanup clears both spinTimeout and jumpTimeout on unmount.
 - Animation triggers:
   - startSpin computes total rotation (extra spins plus target alignment).
   - Rotation state updates with a 4-second cubic-bezier curve.
 - State synchronization:
   - Uses GameContext to set current player and end game when time expires.
 - Interactive elements:
-  - Disabled button during spin.
-  - Leaderboard preview and progress bar.
+  - Disabled button during spin or selection states.
+  - Enhanced leaderboard preview and progress bar with celebratory animations.
 
 ```mermaid
 flowchart TD
@@ -155,17 +164,17 @@ Start(["User clicks Start"]) --> Spin["Compute rotation<br/>and extra spins"]
 Spin --> Rotate["Apply rotation transform"]
 Rotate --> Wait["Wait for spin completion"]
 Wait --> SetIndex["Set selected index"]
-SetIndex --> Delay["Delay before next phase"]
+SetIndex --> Delay["1.5-second delay for selection display"]
 Delay --> SetPlayer["setCurrentPlayer(index)"]
 SetPlayer --> Transition["Transition to challenge_select"]
 ```
 
 **Diagram sources**
-- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L29-L58)
+- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L31-L62)
 - [GameContext.jsx](file://src/context/GameContext.jsx#L115-L121)
 
 **Section sources**
-- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L293)
+- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L300)
 - [GameContext.jsx](file://src/context/GameContext.jsx#L280-L285)
 
 ### ChallengeSelect Component
@@ -216,7 +225,7 @@ Key behaviors:
   - Initializes timeLeft based on challenge type and duration.
   - Counts down while not in voting mode.
 - Voting system:
-  - Simulates other players’ votes (single-device mode).
+  - Simulates other players' votes (single-device mode).
   - Computes pass/funny/explain outcomes and bonus points.
 - Scoring mechanics:
   - Truth challenges award 2 points; dare challenges award 3 points.
@@ -264,7 +273,7 @@ Challenge generation filters questions by difficulty and theme for truth questio
 - [ChallengeSelect.jsx](file://src/components/GamePlay/ChallengeSelect.jsx#L29-L46)
 
 ### Voting System Implementation
-The voting system simulates other players’ votes in a single-device environment. It aggregates votes and determines pass/funny/explain outcomes, awarding points accordingly and applying bonuses.
+The voting system simulates other players' votes in a single-device environment. It aggregates votes and determines pass/funny/explain outcomes, awarding points accordingly and applying bonuses.
 
 - Pass threshold:
   - If any pass or funny vote exists, the challenge passes.
@@ -313,9 +322,22 @@ Accessibility features:
 **Section sources**
 - [index.css](file://src/index.css#L1-L73)
 - [tailwind.config.js](file://tailwind.config.js#L1-L12)
-- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L125-L291)
+- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L125-L299)
 - [ChallengeSelect.jsx](file://src/components/GamePlay/ChallengeSelect.jsx#L77-L199)
 - [ChallengeDisplay.jsx](file://src/components/GamePlay/ChallengeDisplay.jsx#L106-L339)
+
+### Enhanced Timeout Management
+The PlayerWheel component now uses separate timeout management for better state control and user experience. Two distinct timeout references manage different phases of the spinning process:
+
+- **spinTimeout**: Manages the 4-second spinning animation completion and triggers the selection display
+- **jumpTimeout**: Controls the 1.5-second delay before transitioning to the challenge selection phase
+
+This separation allows for more precise state management and prevents conflicts between the spinning animation and the selection display phases.
+
+**Section sources**
+- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L11-L12)
+- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L51-L61)
+- [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L65-L74)
 
 ## Dependency Analysis
 The components depend on GameContext for state and actions, and on data modules for challenge generation. App.jsx orchestrates routing across phases.
@@ -356,7 +378,7 @@ GC --> DQ["dareQuestions.js"]
 - Data filtering:
   - Cache filtered question pools when possible to reduce repeated computations.
 - Cleanup:
-  - Clear timeouts and intervals in useEffect cleanup to prevent memory leaks.
+  - Clear both spinTimeout and jumpTimeout in useEffect cleanup to prevent memory leaks.
 - Rendering:
   - Use AnimatePresence for efficient enter/exit animations.
   - Keep component trees shallow to reduce layout thrashing.
@@ -375,6 +397,9 @@ Common issues and resolutions:
 - Game not ending:
   - Confirm elapsed time calculation and checkGameEnd logic.
   - Verify phase transitions to GAME_SUMMARY.
+- Selection display not showing:
+  - Verify isSelected state is properly managed and cleared after 1.5 seconds.
+  - Check that jumpTimeout executes before setCurrentPlayer is called.
 
 **Section sources**
 - [PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L22-L67)
@@ -383,4 +408,4 @@ Common issues and resolutions:
 - [GameContext.jsx](file://src/context/GameContext.jsx#L281-L285)
 
 ## Conclusion
-The gameplay component system integrates tightly with GameContext to deliver a cohesive, animated, and responsive experience. PlayerWheel provides engaging spinning mechanics, ChallengeSelect offers intuitive choice with countdown, and ChallengeDisplay manages timing, voting, and scoring. Tailwind CSS ensures consistent styling and responsiveness, while Framer Motion enhances user experience through smooth transitions. The modular design and clear state boundaries support maintainability and extensibility.
+The gameplay component system integrates tightly with GameContext to deliver a cohesive, animated, and responsive experience. PlayerWheel provides engaging spinning mechanics with enhanced visual feedback, ChallengeSelect offers intuitive choice with countdown, and ChallengeDisplay manages timing, voting, and scoring. Tailwind CSS ensures consistent styling and responsiveness, while Framer Motion enhances user experience through smooth transitions. The modular design and clear state boundaries support maintainability and extensibility. The recent improvements to PlayerWheel with separate timeout management and enhanced selection feedback demonstrate the system's commitment to user experience optimization.

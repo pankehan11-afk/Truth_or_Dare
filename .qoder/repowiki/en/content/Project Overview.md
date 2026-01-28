@@ -19,6 +19,13 @@
 - [src/index.css](file://src/index.css)
 </cite>
 
+## Update Summary
+**Changes Made**
+- Enhanced PlayerWheel component documentation to reflect improved selection state management
+- Added documentation for the new `isSelected` state and associated timeout mechanisms
+- Updated visual feedback and user experience descriptions
+- Revised component interaction diagrams to show the new selection flow
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Project Structure](#project-structure)
@@ -112,7 +119,7 @@ SUMMARY --> CTX
 - [src/components/GameSetup/WelcomePage.jsx](file://src/components/GameSetup/WelcomePage.jsx#L1-L88)
 - [src/components/GameSetup/PlayerSetup.jsx](file://src/components/GameSetup/PlayerSetup.jsx#L1-L194)
 - [src/components/GameSetup/GameConfig.jsx](file://src/components/GameSetup/GameConfig.jsx#L1-L185)
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L293)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L300)
 - [src/components/GamePlay/ChallengeSelect.jsx](file://src/components/GamePlay/ChallengeSelect.jsx#L1-L201)
 - [src/components/GamePlay/ChallengeDisplay.jsx](file://src/components/GamePlay/ChallengeDisplay.jsx#L1-L341)
 - [src/components/Results/GameSummary.jsx](file://src/components/Results/GameSummary.jsx#L1-L223)
@@ -126,7 +133,7 @@ SUMMARY --> CTX
 
 ## Core Components
 - Game routing and phases: The application routes UI screens based on a finite set of game phases managed in the central context.
-- Player wheel: Interactive spinner that selects the next player with smooth animations and progress tracking.
+- Player wheel: Interactive spinner that selects the next player with smooth animations and progress tracking, featuring enhanced selection state management.
 - Challenge selection: Players choose Truth or Dare with a countdown timer and optional hidden task trigger.
 - Challenge display: Presents the selected challenge with a timer, voting mechanism, skip card usage, and prop activation.
 - Setup and configuration: Welcome screen, player management, and customizable game settings.
@@ -148,7 +155,7 @@ System capabilities:
 
 **Section sources**
 - [src/context/GameContext.jsx](file://src/context/GameContext.jsx#L1-L308)
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L293)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L300)
 - [src/components/GamePlay/ChallengeSelect.jsx](file://src/components/GamePlay/ChallengeSelect.jsx#L1-L201)
 - [src/components/GamePlay/ChallengeDisplay.jsx](file://src/components/GamePlay/ChallengeDisplay.jsx#L1-L341)
 - [src/components/GameSetup/WelcomePage.jsx](file://src/components/GameSetup/WelcomePage.jsx#L1-L88)
@@ -199,7 +206,7 @@ CTX --> ACTIONS
 - [src/components/GameSetup/WelcomePage.jsx](file://src/components/GameSetup/WelcomePage.jsx#L1-L88)
 - [src/components/GameSetup/PlayerSetup.jsx](file://src/components/GameSetup/PlayerSetup.jsx#L1-L194)
 - [src/components/GameSetup/GameConfig.jsx](file://src/components/GameSetup/GameConfig.jsx#L1-L185)
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L293)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L300)
 - [src/components/GamePlay/ChallengeSelect.jsx](file://src/components/GamePlay/ChallengeSelect.jsx#L1-L201)
 - [src/components/GamePlay/ChallengeDisplay.jsx](file://src/components/GamePlay/ChallengeDisplay.jsx#L1-L341)
 - [src/components/Results/GameSummary.jsx](file://src/components/Results/GameSummary.jsx#L1-L223)
@@ -265,7 +272,14 @@ GameContext --> GameState : "manages"
 - [src/context/GameContext.jsx](file://src/context/GameContext.jsx#L1-L308)
 
 ### Player Wheel Mechanics
-The wheel component renders a colorful segmented spinner, animates rotation with easing, and selects a player deterministically after a randomized spin. It integrates with the context to advance the game state and displays real-time progress and leaderboard previews.
+**Updated** Enhanced with improved selection state management and visual feedback system featuring the new `isSelected` state and dual timeout mechanisms.
+
+The wheel component renders a colorful segmented spinner, animates rotation with easing, and selects a player deterministically after a randomized spin. It integrates with the context to advance the game state and displays real-time progress and leaderboard previews. The enhanced selection flow now includes:
+
+- **Dual timeout mechanism**: Separate spin completion (`spinTimeout`) and navigation (`jumpTimeout`) timeouts
+- **Selection state management**: New `isSelected` state tracks when a player has been chosen but before navigation
+- **Enhanced visual feedback**: Improved button states and animations during selection process
+- **Clear user experience**: 1.5-second delay after selection to acknowledge the chosen player
 
 ```mermaid
 sequenceDiagram
@@ -276,19 +290,22 @@ participant R as "gameReducer"
 U->>W : Click "Start Spinning"
 W->>W : Compute extra spins and target angle
 W->>W : Animate rotation with easing
+W->>W : spinTimeout (4000ms) - setIsSpinning(false)
+W->>W : setIsSelected(true) + setSelectedIndex(randomIndex)
+W->>W : jumpTimeout (1500ms) - setIsSelected(false)
 W->>Ctx : setCurrentPlayer(selectedIndex)
 Ctx->>R : Dispatch SET_CURRENT_PLAYER
 R-->>Ctx : New state with currentPlayerIndex
 Ctx-->>W : Updated state
-W->>W : After delay, navigate to ChallengeSelect
+W->>W : Navigate to ChallengeSelect
 ```
 
 **Diagram sources**
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L293)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L300)
 - [src/context/GameContext.jsx](file://src/context/GameContext.jsx#L1-L308)
 
 **Section sources**
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L293)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L300)
 
 ### Challenge System: Truth vs. Dare
 Players select Truth or Dare with a countdown timer. The selection triggers question retrieval from themed and difficulty-filtered pools. A small chance introduces a hidden task, adding variety and surprise.
@@ -426,6 +443,7 @@ Context --> Data
 - Question pools: Filtering and randomization are lightweight; avoid unnecessary recomputation by caching used IDs per type.
 - Rendering lists: Virtualize long lists (leaderboard/history) if extended.
 - CSS: Tailwind utilities are efficient; avoid excessive nested styles.
+- **Enhanced PlayerWheel performance**: Dual timeout mechanism prevents race conditions and ensures smooth state transitions.
 
 ## Troubleshooting Guide
 Common issues and resolutions:
@@ -434,15 +452,16 @@ Common issues and resolutions:
 - Timer anomalies: Confirm timers are cleared on unmount and re-initialized on mount.
 - Vote evaluation: Ensure default pass when no votes are submitted; confirm vote aggregation logic.
 - Prop usage: Validate prop activation and removal; ensure double-point logic applies only once per round.
+- **PlayerWheel selection issues**: Verify `isSelected` state transitions and timeout cleanup in effect hooks.
 
 **Section sources**
-- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L293)
+- [src/components/GamePlay/PlayerWheel.jsx](file://src/components/GamePlay/PlayerWheel.jsx#L1-L300)
 - [src/components/GamePlay/ChallengeSelect.jsx](file://src/components/GamePlay/ChallengeSelect.jsx#L1-L201)
 - [src/components/GamePlay/ChallengeDisplay.jsx](file://src/components/GamePlay/ChallengeDisplay.jsx#L1-L341)
 - [src/context/GameContext.jsx](file://src/context/GameContext.jsx#L1-L308)
 
 ## Conclusion
-The Truth or Dare Game delivers a polished, animated, and configurable digital take on a beloved party game. Its modular architecture, centralized state management, and thoughtful UI interactions make it ideal for social gatherings. With features like themed questions, props, hidden tasks, and real-time scoring, it enhances spontaneity and engagement while maintaining simplicity and accessibility.
+The Truth or Dare Game delivers a polished, animated, and configurable digital take on a beloved party game. Its modular architecture, centralized state management, and thoughtful UI interactions make it ideal for social gatherings. With features like themed questions, props, hidden tasks, and real-time scoring, it enhances spontaneity and engagement while maintaining simplicity and accessibility. The enhanced PlayerWheel component provides a smoother, more intuitive selection experience with improved visual feedback and state management.
 
 ## Appendices
 - Use cases:
@@ -453,3 +472,4 @@ The Truth or Dare Game delivers a polished, animated, and configurable digital t
   - Smooth animations and transitions for immersive gameplay.
   - Dynamic hidden tasks and prop mechanics for strategic depth.
   - Tailored question pools by theme and difficulty for varied experiences.
+  - **Enhanced PlayerWheel selection flow with improved user experience and visual feedback**.
