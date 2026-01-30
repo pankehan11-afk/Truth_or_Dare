@@ -42,6 +42,10 @@ const initialState = {
   usedQuestions: { truth: [], dare: [] }, // 记录已用过的题目ID
   activeProps: [], // 当前轮次激活的道具
   hiddenTaskTriggered: false, // 隐藏任务是否触发
+  // AI个性化出题相关
+  likedQuestions: { truth: [], dare: [] }, // 分开存储喜欢的题目
+  userPreference: { truth: null, dare: null }, // AI分析后的用户喜好描述
+  aiQuestionsEnabled: { truth: false, dare: false }, // 真心话20个/大冒饩10个激活
 };
 
 // Action类型
@@ -63,6 +67,11 @@ const ACTION_TYPES = {
   RESET_GAME: 'RESET_GAME',
   TRIGGER_HIDDEN_TASK: 'TRIGGER_HIDDEN_TASK',
   CLEAR_PLAYERS: 'CLEAR_PLAYERS',
+  // AI个性化出题Action
+  LIKE_QUESTION: 'LIKE_QUESTION',
+  UNLIKE_QUESTION: 'UNLIKE_QUESTION',
+  SET_USER_PREFERENCE: 'SET_USER_PREFERENCE',
+  ENABLE_AI_QUESTIONS: 'ENABLE_AI_QUESTIONS',
 };
 
 // Reducer
@@ -263,11 +272,63 @@ function gameReducer(state, action) {
         players: [],
       };
     
-    case ACTION_TYPES.CLEAR_PLAYERS:
+    // AI个性化出题相关
+    case ACTION_TYPES.LIKE_QUESTION: {
+      const { question, type } = action.payload;
+      const typeQuestions = state.likedQuestions[type] || [];
+      const alreadyLiked = typeQuestions.some(q => q.id === question.id);
+      if (alreadyLiked) return state;
+      
+      const newTypeQuestions = [...typeQuestions, { ...question, type }];
+      
+      // 真心话20个激活，大冒饩10个激活
+      const threshold = type === 'truth' ? 20 : 10;
+      const shouldEnableAI = newTypeQuestions.length >= threshold && !state.aiQuestionsEnabled[type];
+      
       return {
         ...state,
-        players: [],
+        likedQuestions: {
+          ...state.likedQuestions,
+          [type]: newTypeQuestions,
+        },
+        aiQuestionsEnabled: shouldEnableAI 
+          ? { ...state.aiQuestionsEnabled, [type]: true }
+          : state.aiQuestionsEnabled,
       };
+    }
+    
+    case ACTION_TYPES.UNLIKE_QUESTION: {
+      const { questionId, type } = action.payload;
+      return {
+        ...state,
+        likedQuestions: {
+          ...state.likedQuestions,
+          [type]: (state.likedQuestions[type] || []).filter(q => q.id !== questionId),
+        },
+      };
+    }
+    
+    case ACTION_TYPES.SET_USER_PREFERENCE: {
+      const { type, preference } = action.payload;
+      return {
+        ...state,
+        userPreference: {
+          ...state.userPreference,
+          [type]: preference,
+        },
+      };
+    }
+    
+    case ACTION_TYPES.ENABLE_AI_QUESTIONS: {
+      const { type, enabled } = action.payload;
+      return {
+        ...state,
+        aiQuestionsEnabled: {
+          ...state.aiQuestionsEnabled,
+          [type]: enabled,
+        },
+      };
+    }
     
     default:
       return state;
@@ -301,6 +362,11 @@ export function GameProvider({ children }) {
     triggerHiddenTask: () => dispatch({ type: ACTION_TYPES.TRIGGER_HIDDEN_TASK }),
     endGame: () => dispatch({ type: ACTION_TYPES.SET_PHASE, payload: GAME_PHASES.GAME_SUMMARY }),
     clearPlayers: () => dispatch({ type: ACTION_TYPES.CLEAR_PLAYERS }),
+    // AI个性化出题相关
+    likeQuestion: (question, type) => dispatch({ type: ACTION_TYPES.LIKE_QUESTION, payload: { question, type } }),
+    unlikeQuestion: (questionId, type) => dispatch({ type: ACTION_TYPES.UNLIKE_QUESTION, payload: { questionId, type } }),
+    setUserPreference: (type, preference) => dispatch({ type: ACTION_TYPES.SET_USER_PREFERENCE, payload: { type, preference } }),
+    enableAIQuestions: (type, enabled) => dispatch({ type: ACTION_TYPES.ENABLE_AI_QUESTIONS, payload: { type, enabled } }),
   };
 
   // 获取当前玩家

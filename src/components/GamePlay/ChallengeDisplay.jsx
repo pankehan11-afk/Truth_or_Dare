@@ -12,6 +12,14 @@ export default function ChallengeDisplay() {
   const currentPlayer = getCurrentPlayer();
   const challenge = state.currentChallenge;
   const isHiddenTask = challenge?.isHidden;
+  const currentType = state.challengeType; // 'truth' 或 'dare'
+  
+  // 检查当前题目是否已被喜欢（根据类型分开查询）
+  const typeQuestions = state.likedQuestions[currentType] || [];
+  const isLiked = challenge && typeQuestions.some(q => q.id === challenge.id);
+  const likedCount = typeQuestions.length;
+  const threshold = currentType === 'truth' ? 20 : 10;
+  const isAIEnabled = state.aiQuestionsEnabled[currentType];
   
   // 初始化计时器
   useEffect(() => {
@@ -151,14 +159,55 @@ export default function ChallengeDisplay() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className={`p-6 rounded-2xl mb-6 text-center
+          className={`p-6 rounded-2xl mb-6 relative
                      ${state.challengeType === 'truth'
                        ? 'bg-gradient-to-br from-pink-50 to-rose-100 border-2 border-pink-200'
                        : 'bg-gradient-to-br from-orange-50 to-amber-100 border-2 border-orange-200'}`}
         >
-          <p className="text-xl font-medium text-gray-800 leading-relaxed">
+          {/* 爱心按钮 */}
+          <motion.button
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => {
+              if (isLiked) {
+                actions.unlikeQuestion(challenge.id, currentType);
+              } else {
+                actions.likeQuestion(challenge, currentType);
+              }
+            }}
+            className="absolute top-3 right-3 text-2xl z-10"
+          >
+            <motion.span
+              animate={isLiked ? { scale: [1, 1.3, 1] } : {}}
+              transition={{ duration: 0.3 }}
+            >
+              {isLiked ? '❤️' : '🩶'}
+            </motion.span>
+          </motion.button>
+          
+          {/* AI题目标识 */}
+          {challenge.isAI && (
+            <div className="absolute top-3 left-3">
+              <span className="px-2 py-1 bg-purple-500 text-white text-xs rounded-full">
+                ✨ AI出题
+              </span>
+            </div>
+          )}
+          
+          <p className="text-xl font-medium text-gray-800 leading-relaxed text-center pt-2">
             {challenge.content}
           </p>
+          
+          {/* 爱心进度 - 达满后只显示AI激活 */}
+          <div className="mt-4 flex items-center justify-center gap-2 text-sm">
+            {isAIEnabled ? (
+              <span className="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-xs font-medium">
+                ✨ {currentType === 'truth' ? '真心话' : '大冒险'}AI出题已激活
+              </span>
+            ) : (
+              <span className="text-gray-400">❤️ {likedCount}/{threshold}</span>
+            )}
+          </div>
         </motion.div>
 
         {/* 计时器 */}

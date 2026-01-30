@@ -79,7 +79,7 @@ export default function WelcomePage() {
 
         {/* 版本信息 */}
         <p className="mt-6 text-gray-400 text-xs">
-          v2.1.0 · 本地聚会版
+          v3.0.0 · 本地聚会版
         </p>
       </div>
     </motion.div>

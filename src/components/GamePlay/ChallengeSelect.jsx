@@ -3,11 +3,13 @@ import { motion } from 'framer-motion';
 import { useGame, GAME_PHASES } from '../../context/GameContext';
 import { getTruthQuestion } from '../../data/truthQuestions';
 import { getDareQuestion, getHiddenTask } from '../../data/dareQuestions';
+import { generateQuestion, analyzePreference } from '../../services/aiService';
 
 export default function ChallengeSelect() {
   const { state, actions, getCurrentPlayer } = useGame();
   const [countdown, setCountdown] = useState(10);
   const [selected, setSelected] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   const currentPlayer = getCurrentPlayer();
 
   // 倒计时
@@ -35,7 +37,25 @@ export default function ChallengeSelect() {
     return false;
   };
 
-  const handleSelect = (type) => {
+  // 尝试使用AI生成题目
+  const tryGenerateAIQuestion = async (type) => {
+    const typeQuestions = state.likedQuestions[type] || [];
+    const threshold = type === 'truth' ? 20 : 10;
+    
+    // 如果还没有分析用户喜好，先分析
+    if (!state.userPreference[type] && typeQuestions.length >= threshold) {
+      const preference = await analyzePreference(typeQuestions);
+      if (preference) {
+        actions.setUserPreference(type, preference);
+      }
+    }
+    
+    // 生成AI题目
+    const aiQuestion = await generateQuestion(state.userPreference[type], type);
+    return aiQuestion;
+  };
+
+  const handleSelect = async (type) => {
     if (selected) return;
     
     setSelected(type);
@@ -45,25 +65,44 @@ export default function ChallengeSelect() {
     const isHidden = checkHiddenTask();
     
     // 延迟后获取题目并进入下一阶段
-    setTimeout(() => {
+    setTimeout(async () => {
       let question;
+      
       if (isHidden) {
         question = {
           ...getHiddenTask(),
           isHidden: true,
           difficulty: 3,
         };
-      } else if (type === 'truth') {
-        question = getTruthQuestion({
-          difficulty: state.config.difficulty,
-          theme: state.config.theme,
-          usedIds: state.usedQuestions.truth,
-        });
       } else {
-        question = getDareQuestion({
-          difficulty: state.config.difficulty,
-          usedIds: state.usedQuestions.dare,
-        });
+        // 如果对应类型的AI出题已激活，50%概率使用AI生成
+        const shouldUseAI = state.aiQuestionsEnabled[type] && Math.random() < 0.5;
+        
+        if (shouldUseAI) {
+          setIsGenerating(true);
+          const aiQuestion = await tryGenerateAIQuestion(type);
+          setIsGenerating(false);
+          
+          if (aiQuestion) {
+            question = aiQuestion;
+          }
+        }
+        
+        // 如果没有AI题目，使用原题库
+        if (!question) {
+          if (type === 'truth') {
+            question = getTruthQuestion({
+              difficulty: state.config.difficulty,
+              theme: state.config.theme,
+              usedIds: state.usedQuestions.truth,
+            });
+          } else {
+            question = getDareQuestion({
+              difficulty: state.config.difficulty,
+              usedIds: state.usedQuestions.dare,
+            });
+          }
+        }
       }
       
       actions.setChallenge(question);
